@@ -1,0 +1,9 @@
+type: trino
+name: trino_analytics
+connection:
+  host: localhost
+  port: 8080
+  catalog: source
+  http_scheme: http
+  auth_type: NoAuthentication
+  user: admin
