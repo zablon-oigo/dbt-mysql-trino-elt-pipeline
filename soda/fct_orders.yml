@@ -1,0 +1,45 @@
+dataset: trino_analytics/source/analytics_db/fct_orders
+
+checks:
+  - schema:
+  - row_count:
+      must_be_greater_than: 0
+
+columns:
+  - name: order_id
+    checks:
+      - missing:
+          must_be: 0
+      - duplicate:
+          must_be: 0
+  - name: order_date
+    checks:
+      - missing:
+          must_be: 0
+  - name: required_date
+  - name: shipped_date
+  - name: status
+    checks:
+      - missing:
+          must_be: 0
+  - name: customer_id
+    checks:
+      - missing:
+          must_be: 0
+  - name: number_of_items
+    checks:
+      - invalid:
+          valid_min: 1
+          must_be: 0
+  - name: total_quantity
+    checks:
+      - invalid:
+          valid_min: 1
+          must_be: 0
+  - name: order_amount
+    checks:
+      - missing:
+          must_be: 0
+      - invalid:
+          valid_min: 0
+          must_be: 0
