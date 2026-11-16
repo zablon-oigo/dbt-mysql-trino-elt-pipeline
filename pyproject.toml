@@ -8,5 +8,6 @@ dependencies = [
     "dbt>=2.0.9",
     "dbt-trino==1.10.3",
     "setuptools>=84.2.1",
-    "soda-core-trino>=3.5.6",
+    "soda-postgres>=4.30.0",
+    "soda-trino>=4.30.0",
 ]
