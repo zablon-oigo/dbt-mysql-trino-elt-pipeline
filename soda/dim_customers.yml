@@ -1,0 +1,16 @@
+dataset: trino_analytics/source/analytics_db/dim_customers
+
+checks:
+  - schema:
+      allow_extra_columns: true
+      ignore_column_order: true
+  - row_count:
+      must_be_greater_than: 0
+
+columns:
+  - name: customer_id
+    checks:
+      - missing:
+          must_be: 0
+      - duplicate:
+          must_be: 0
