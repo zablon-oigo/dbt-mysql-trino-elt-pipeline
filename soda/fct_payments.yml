@@ -1,0 +1,29 @@
+dataset: trino_analytics/source/analytics_db/fct_payments
+
+checks:
+  - schema:
+  - row_count:
+      must_be_greater_than: 0
+
+columns:
+  - name: customer_id
+    checks:
+      - missing:
+          must_be: 0
+  - name: check_number
+    checks:
+      - missing:
+          must_be: 0
+      - duplicate:
+          must_be: 0
+  - name: payment_date
+    checks:
+      - missing:
+          must_be: 0
+  - name: amount
+    checks:
+      - missing:
+          must_be: 0
+      - invalid:
+          valid_min: 0
+          must_be: 0
