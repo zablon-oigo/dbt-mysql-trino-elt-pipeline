@@ -9,6 +9,9 @@
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python&logoColor=white)
 ![uv](https://img.shields.io/badge/uv-Package_Manager-DE5FE9?logo=uv&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white)
+![Build Status](https://github.com/zablon-oigo/dbt-mysql-trino-elt-pipeline/actions/workflows/ci.yml/badge.svg)
+![GitHub Release](https://img.shields.io/github/v/release/zablon-oigo/postgres-elt?label=Production%20Release)
 
 
 An end-to-end ELT pipeline that transforms e-commerce sales data using **MySQL, Trino, dbt, and Soda**, with Apache Superset providing the data visualization layer.
