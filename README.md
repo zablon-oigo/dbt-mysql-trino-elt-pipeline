@@ -20,6 +20,8 @@ The project demonstrates how to build an analytics platform where raw transactio
 
 ## Architecture
 
+<img width="953" height="490" alt="elt-trino excalidraw" src="https://github.com/user-attachments/assets/5aef8a8c-793c-480c-8d94-4d0608bd4937" />
+
 
 ## Prerequisites
 
