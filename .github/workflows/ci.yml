@@ -1,0 +1,63 @@
+name: ELT Data Quality CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install Python dependencies
+        run: uv sync
+
+      - name: Download and extract raw dataset
+        run: bash scripts/init-mysql.sh
+
+      - name: Create CI .env file
+        run: |
+          cat << 'EOF' > .env
+          MYSQL_ROOT_PASSWORD=rootpass
+          MYSQL_USER=elt_user
+          MYSQL_PASSWORD=elt_pass
+          SOURCE_DB=sales
+          ANALYTICS_DB=analytics_db
+          TRINO_USER=admin
+          SUPERSET_SECRET_KEY=ci_secret
+          SUPERSET_ADMIN=admin
+          SUPERSET_ADMIN_PASSWORD=admin
+          EOF
+
+      - name: Start MySQL and Trino containers
+        run: docker compose up -d mysql trino
+
+      - name: Wait for Trino & prepare analytics_db schema
+        run: |
+          echo "Waiting for Trino query engine..."
+          until curl -s http://127.0.0 | grep -q '"starting":false'; do
+            sleep 3
+          done
+          echo "Trino is ready! Creating analytics_db and granting permissions..."
+          docker exec elt-mysql mysql -uroot -prootpass -e "CREATE DATABASE IF NOT EXISTS analytics_db; GRANT ALL PRIVILEGES ON analytics_db.* TO 'elt_user'@'%'; FLUSH PRIVILEGES;"
+
+      - name: Run dbt build
+        run: uv run dbt build --project-dir analytics --profiles-dir analytics
+
+      - name: Verify Soda Data Contracts
+        run: |
+          for contract in soda/*.yml; do
+            if [ "$(basename "$contract")" = "config.yml" ]; then
+              continue
+            fi
+            echo "Verifying $contract..."
+            uv run soda contract verify --data-source soda/config.yml --contract "$contract"
+          done
