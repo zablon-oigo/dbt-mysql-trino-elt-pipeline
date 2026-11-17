@@ -40,13 +40,13 @@ jobs:
       - name: Start MySQL and Trino containers
         run: docker compose up -d mysql trino
 
-      - name: Wait for MySQL and prepare analytics_db schema
-        timeout-minutes: 3
+      - name: Wait for MySQL and Trino
+        timeout-minutes: 5
         run: |
           echo "Waiting for MySQL..."
 
           until docker exec elt-mysql mysqladmin ping \
-            -uroot -prootpass --silent; do
+            -uroot -prootpass --silent 2>/dev/null; do
             sleep 3
           done
 
@@ -58,16 +58,27 @@ jobs:
             FLUSH PRIVILEGES;
           "
 
-          echo "Waiting for Trino"
+          echo "Waiting for Trino..."
 
-          timeout 180 bash -c '
-            until curl -fsS http://127.0.0.1:8080/v1/info \
-              | grep -q "\"starting\":false"; do
-              sleep 3
-            done
-          '
+          READY=false
 
-          echo "Trino is ready"
+          for i in $(seq 1 100); do
+            if curl -fsS http://127.0.0.1:8080/v1/info 2>/dev/null \
+              | grep -q '"starting":false'; then
+              READY=true
+              break
+            fi
+
+            sleep 3
+          done
+
+          if [ "$READY" != "true" ]; then
+            echo "Trino failed to become ready."
+            docker logs elt-trino --tail 100
+            exit 1
+          fi
+
+          echo "Trino is ready."
 
       - name: Run dbt build
         run: uv run dbt build --project-dir analytics --profiles-dir analytics
