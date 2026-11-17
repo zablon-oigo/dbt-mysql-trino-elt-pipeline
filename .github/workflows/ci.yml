@@ -41,13 +41,15 @@ jobs:
         run: docker compose up -d mysql trino
 
       - name: Wait for Trino & prepare analytics_db schema
+        timeout-minutes: 3
         run: |
           echo "Waiting for Trino query engine..."
           until curl -s http://127.0.0 | grep -q '"starting":false'; do
             sleep 3
           done
-          echo "Trino is ready! Creating analytics_db and granting permissions..."
+          echo "Trino is ready, Creating analytics_db and granting permissions."
           docker exec elt-mysql mysql -uroot -prootpass -e "CREATE DATABASE IF NOT EXISTS analytics_db; GRANT ALL PRIVILEGES ON analytics_db.* TO 'elt_user'@'%'; FLUSH PRIVILEGES;"
+
 
       - name: Run dbt build
         run: uv run dbt build --project-dir analytics --profiles-dir analytics
