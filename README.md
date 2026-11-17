@@ -279,3 +279,7 @@ trino://admin@trino:8080/source
 
 You can now browse the analytics tables exposed through Trino, create datasets, and build dashboards.
 
+#### Dashboard
+<img width="1900" height="938" alt="image" src="https://github.com/user-attachments/assets/61d89d5e-0b9a-417d-9dbd-9e35fab007aa" />
+
+
