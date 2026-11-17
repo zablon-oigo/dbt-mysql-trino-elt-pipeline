@@ -80,6 +80,9 @@ jobs:
 
           echo "Trino is ready."
 
+      - name: Install dbt packages
+        run: uv run dbt deps --project-dir analytics --profiles-dir analytics
+
       - name: Run dbt build
         run: uv run dbt build --project-dir analytics --profiles-dir analytics
 
