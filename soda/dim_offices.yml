@@ -1,0 +1,28 @@
+dataset: trino_analytics/source/analytics_db/dim_offices
+
+checks:
+  - schema:
+  - row_count:
+      must_be_greater_than: 0
+
+columns:
+  - name: office_id
+    checks:
+      - missing:
+          must_be: 0
+      - duplicate:
+          must_be: 0
+  - name: city
+    checks:
+      - missing:
+          must_be: 0
+  - name: phone
+  - name: address_line_1
+  - name: address_line_2
+  - name: state
+  - name: country
+    checks:
+      - missing:
+          must_be: 0
+  - name: postal_code
+  - name: territory
